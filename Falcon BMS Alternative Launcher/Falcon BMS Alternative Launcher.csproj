@@ -102,6 +102,7 @@
     </ApplicationDefinition>
     <Compile Include="AppProperties.cs" />
     <Compile Include="AppRegInfo.cs" />
+    <Compile Include="Backup.cs" />
     <Compile Include="Input\AxAssgn.cs" />
     <Compile Include="Input\AxisName.cs" />
     <Compile Include="Input\DeviceControl.cs" />

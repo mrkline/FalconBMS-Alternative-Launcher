@@ -37,8 +37,7 @@ namespace FalconBMS.Launcher
         /// <param name="visualAcuity"></param>
         public void Execute(Hashtable inGameAxis, DeviceControl deviceControl, KeyFile keyFile)
         {
-            if (!Directory.Exists(appReg.GetInstallDir() + "/User/Config/Backup/"))
-                Directory.CreateDirectory(appReg.GetInstallDir() + "/User/Config/Backup/");
+            Backup.CreateDirectory(appReg);
 
             SaveAxisMapping(inGameAxis, deviceControl);
             SaveJoystickCal(inGameAxis, deviceControl);
@@ -54,11 +53,7 @@ namespace FalconBMS.Launcher
         protected void SaveWindowConfig()
         {
             string filename = appReg.GetInstallDir() + "/User/Config/windowconfig.dat";
-            string fbackupname = appReg.GetInstallDir() + "/User/Config/Backup/windowconfig.dat";
-            if (!File.Exists(fbackupname) & File.Exists(filename))
-                File.Copy(filename, fbackupname, true);
-            if (File.Exists(filename))
-                File.SetAttributes(filename, File.GetAttributes(filename) & ~FileAttributes.ReadOnly);
+            Backup.CopyFileAndMakeWriteable(appReg, filename);
 
             if (!File.Exists(filename))
             {
@@ -142,12 +137,7 @@ namespace FalconBMS.Launcher
         protected virtual void SaveConfigfile(Hashtable inGameAxis, DeviceControl deviceControl)
         {
             string filename = appReg.GetInstallDir() + "/User/Config/falcon bms.cfg";
-            string fbackupname = appReg.GetInstallDir() + "/User/Config/Backup/falcon bms.cfg";
-            if (!File.Exists(fbackupname) & File.Exists(filename))
-                File.Copy(filename, fbackupname, true);
-
-            if (File.Exists(filename))
-                File.SetAttributes(filename, File.GetAttributes(filename) & ~FileAttributes.ReadOnly);
+            Backup.CopyFileAndMakeWriteable(appReg, filename);
 
             StreamReader cReader = new StreamReader
                 (filename, Encoding.Default);
@@ -184,12 +174,7 @@ namespace FalconBMS.Launcher
 
             // BMS overwrites DeviceSorting.txt if was written in UTF-8.
             string filename = appReg.GetInstallDir() + "/User/Config/DeviceSorting.txt";
-            string fbackupname = appReg.GetInstallDir() + "/User/Config/Backup/DeviceSorting.txt";
-            if (!File.Exists(fbackupname) & File.Exists(filename))
-                File.Copy(filename, fbackupname, true);
-
-            if (File.Exists(filename))
-                File.SetAttributes(filename, File.GetAttributes(filename) & ~FileAttributes.ReadOnly);
+            Backup.CopyFileAndMakeWriteable(appReg, filename);
 
             StreamWriter ds = new StreamWriter
                 (filename, false, Encoding.GetEncoding("shift_jis"));
@@ -203,12 +188,7 @@ namespace FalconBMS.Launcher
         protected virtual void SaveKeyMapping(Hashtable inGameAxis, DeviceControl deviceControl, KeyFile keyFile)
         {
             string filename = appReg.GetInstallDir() + "/User/Config/" + appReg.getKeyFileName();
-            string fbackupname = appReg.GetInstallDir() + "/User/Config/Backup/" + appReg.getKeyFileName();
-            if (!File.Exists(fbackupname) & File.Exists(filename))
-                File.Copy(filename, fbackupname, true);
-
-            if (File.Exists(filename))
-                File.SetAttributes(filename, File.GetAttributes(filename) & ~FileAttributes.ReadOnly);
+            Backup.CopyFileAndMakeWriteable(appReg, filename);
 
             StreamWriter sw = new StreamWriter
                 (filename, false, Encoding.GetEncoding("utf-8"));
@@ -291,12 +271,7 @@ namespace FalconBMS.Launcher
         protected void SaveAxisMapping(Hashtable inGameAxis, DeviceControl deviceControl)
         {
             string filename = appReg.GetInstallDir() + "/User/Config/axismapping.dat";
-            string fbackupname = appReg.GetInstallDir() + "/User/Config/Backup/axismapping.dat";
-            if (!File.Exists(fbackupname) & File.Exists(filename))
-                File.Copy(filename, fbackupname, true);
-
-            if (File.Exists(filename))
-                File.SetAttributes(filename, File.GetAttributes(filename) & ~FileAttributes.ReadOnly);
+            Backup.CopyFileAndMakeWriteable(appReg, filename);
 
             FileStream fs = new FileStream
                 (filename, FileMode.Create, FileAccess.Write);
@@ -408,12 +383,7 @@ namespace FalconBMS.Launcher
         protected virtual void SaveJoystickCal(Hashtable inGameAxis, DeviceControl deviceControl)
         {
             string filename = appReg.GetInstallDir() + "/User/Config/joystick.cal";
-            string fbackupname = appReg.GetInstallDir() + "/User/Config/Backup/joystick.cal";
-            if (!File.Exists(fbackupname) & File.Exists(filename))
-                File.Copy(filename, fbackupname, true);
-
-            if (File.Exists(filename))
-                File.SetAttributes(filename, File.GetAttributes(filename) & ~FileAttributes.ReadOnly);
+            Backup.CopyFileAndMakeWriteable(appReg, filename);
 
             FileStream fs = new FileStream
                 (filename, FileMode.Create, FileAccess.Write);
@@ -497,6 +467,7 @@ namespace FalconBMS.Launcher
         protected override void SavePop()
         {
             string filename = appReg.GetInstallDir() + "/User/Config/" + appReg.GetPilotCallsign() + ".pop";
+            Backup.CopyFileAndMakeWriteable(appReg, filename);
             if (!File.Exists(filename))
             {
                 byte[] nbs = {
@@ -528,11 +499,6 @@ namespace FalconBMS.Launcher
                 nfs.Write(nbs, 0, nbs.Length);
                 nfs.Close();
             }
-            string fbackupname = appReg.GetInstallDir() + "/User/Config/Backup/" + appReg.GetPilotCallsign() + ".pop";
-            if (!File.Exists(fbackupname))
-                File.Copy(filename, fbackupname, true);
-
-            File.SetAttributes(filename, File.GetAttributes(filename) & ~FileAttributes.ReadOnly);
 
             FileStream fs = new FileStream
                 (filename, FileMode.Open, FileAccess.Read);
@@ -659,6 +625,7 @@ namespace FalconBMS.Launcher
         protected override void SavePop()
         {
             string filename = appReg.GetInstallDir() + "/User/Config/" + appReg.GetPilotCallsign() + ".pop";
+            Backup.CopyFileAndMakeWriteable(appReg, filename);
             if (!File.Exists(filename))
             {
                 byte[] nbs = {
@@ -694,11 +661,6 @@ namespace FalconBMS.Launcher
                 nfs.Write(nbs, 0, nbs.Length);
                 nfs.Close();
             }
-            string fbackupname = appReg.GetInstallDir() + "/User/Config/Backup/" + appReg.GetPilotCallsign() + ".pop";
-            if (!File.Exists(fbackupname))
-                File.Copy(filename, fbackupname, true);
-
-            File.SetAttributes(filename, File.GetAttributes(filename) & ~FileAttributes.ReadOnly);
 
             FileStream fs = new FileStream
                 (filename, FileMode.Open, FileAccess.Read);
@@ -821,12 +783,7 @@ namespace FalconBMS.Launcher
         protected override void SaveConfigfile(Hashtable inGameAxis, DeviceControl deviceControl)
         {
             string filename = appReg.GetInstallDir() + "/User/Config/falcon bms.cfg";
-            string fbackupname = appReg.GetInstallDir() + "/User/Config/Backup/falcon bms.cfg";
-            if (!File.Exists(fbackupname) & File.Exists(filename))
-                File.Copy(filename, fbackupname, true);
-
-            if (File.Exists(filename))
-                File.SetAttributes(filename, File.GetAttributes(filename) & ~FileAttributes.ReadOnly);
+            Backup.CopyFileAndMakeWriteable(appReg, filename);
 
             StreamReader cReader = new StreamReader
                 (filename, Encoding.Default);
@@ -914,12 +871,7 @@ namespace FalconBMS.Launcher
         protected override void SaveJoystickCal(Hashtable inGameAxis, DeviceControl deviceControl)
         {
             string filename = appReg.GetInstallDir() + "/User/Config/joystick.cal";
-            string fbackupname = appReg.GetInstallDir() + "/User/Config/Backup/joystick.cal";
-            if (!File.Exists(fbackupname) & File.Exists(filename))
-                File.Copy(filename, fbackupname, true);
-
-            if (File.Exists(filename))
-                File.SetAttributes(filename, File.GetAttributes(filename) & ~FileAttributes.ReadOnly);
+            Backup.CopyFileAndMakeWriteable(appReg, filename);
 
             FileStream fs = new FileStream
                 (filename, FileMode.Create, FileAccess.Write);
@@ -975,6 +927,7 @@ namespace FalconBMS.Launcher
         protected override void SavePop()
         {
             string filename = appReg.GetInstallDir() + "/User/Config/" + appReg.GetPilotCallsign() + ".pop";
+            Backup.CopyFileAndMakeWriteable(appReg, filename);
             if (!File.Exists(filename))
             {
                 byte[] nbs = {
@@ -1010,11 +963,6 @@ namespace FalconBMS.Launcher
                 nfs.Write(nbs, 0, nbs.Length);
                 nfs.Close();
             }
-            string fbackupname = appReg.GetInstallDir() + "/User/Config/Backup/" + appReg.GetPilotCallsign() + ".pop";
-            if (!File.Exists(fbackupname))
-                File.Copy(filename, fbackupname, true);
-
-            File.SetAttributes(filename, File.GetAttributes(filename) & ~FileAttributes.ReadOnly);
 
             FileStream fs = new FileStream
                 (filename, FileMode.Open, FileAccess.Read);
@@ -1161,6 +1109,7 @@ namespace FalconBMS.Launcher
         protected override void SavePop()
         {
             string filename = appReg.GetInstallDir() + "/User/Config/" + appReg.GetPilotCallsign() + ".pop";
+            Backup.CopyFileAndMakeWriteable(appReg, filename);
             if (!File.Exists(filename))
             {
                 byte[] nbs = {
@@ -1199,11 +1148,6 @@ namespace FalconBMS.Launcher
                 nfs.Write(nbs, 0, nbs.Length);
                 nfs.Close();
             }
-            string fbackupname = appReg.GetInstallDir() + "/User/Config/Backup/" + appReg.GetPilotCallsign() + ".pop";
-            if (!File.Exists(fbackupname))
-                File.Copy(filename, fbackupname, true);
-
-            File.SetAttributes(filename, File.GetAttributes(filename) & ~FileAttributes.ReadOnly);
 
             FileStream fs = new FileStream
                 (filename, FileMode.Open, FileAccess.Read);

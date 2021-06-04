@@ -14,10 +14,7 @@ namespace FalconBMS.Launcher
         public static void PopulateAndSave(AppRegInfo appReg, ComboBox Combo)
         {
             string filename = appReg.GetInstallDir() + "/Data/Terrdata/theaterdefinition/theater.lst";
-            string fbackupname = appReg.GetInstallDir() + "/User/Config/Backup/theater.lst";
-            if (!File.Exists(fbackupname) & File.Exists(filename))
-                File.Copy(filename, fbackupname, false);
-            File.SetAttributes(filename, File.GetAttributes(filename) & ~FileAttributes.ReadOnly);
+            Backup.CopyFileAndMakeWriteable(appReg, filename);
 
             var theaterFiles = Directory.GetFiles(appReg.GetInstallDir() + "/Data", "*.tdf", SearchOption.AllDirectories);
             System.Array.Sort(theaterFiles);
